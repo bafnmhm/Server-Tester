@@ -5,16 +5,20 @@ from xml.dom import minidom
 from inc.Parser import *
 from inc.Request import *
 
-path = 'usecase'
+usecaseDir = 'usecase'
 scriptPath = sys.path[0]
 parser = Parser()
 request = Request()
 
-for curPath in os.walk(path):
+for i, cmd in enumerate(sys.argv):
+    if cmd == '-ip':
+        request.host = sys.argv[i + 1]
+
+for curPath in os.walk(scriptPath + '\\' + usecaseDir):
     for file in curPath[2]:
         # 执行一个测例文件
-        fileDir = scriptPath + '\\' + curPath[0] + '\\' + file
-        reportPath = scriptPath + '\\' + curPath[0].replace(path, 'report')
+        fileDir = curPath[0] + '\\' + file
+        reportPath = curPath[0].replace(usecaseDir, 'report')
         reportFilePath = reportPath + '\\' + file
 
         # 删除原有的报告
@@ -35,6 +39,7 @@ for curPath in os.walk(path):
             request.httpSend(req['url'], req['post'])
 
             # 请求结束，保存结果
+            print(reportFilePath)
             with open(reportFilePath, 'a', encoding='utf-8') as f:
                 res = request.getContent()
                 res = res.decode(encoding='utf-8')
@@ -42,7 +47,7 @@ for curPath in os.walk(path):
                 # 美化xml格式
                 if res.find('<?xml') >= 0:
                     dom = minidom.parseString(res)
-                    res = dom.toprettyxml(indent=' '*4)
+                    res = dom.toprettyxml(indent=' ' * 4)
 
                 # 美化json格式
                 try:
