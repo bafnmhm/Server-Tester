@@ -6,12 +6,15 @@ class Parser:
         allReq = []
         req = {}
         post = ''
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='gbk') as f:
             while True:
                 line = f.readline()
                 if line:
                     # 折行
                     if self.isWordwrap(line):
+                        continue
+                    # 注释
+                    if self.isComment(line):
                         continue
                     # url
                     if self.isUrl(line):
@@ -21,6 +24,8 @@ class Parser:
                     post += line.strip()
                 else:
                     req['post'] = self.parsePost(post)
+                    if not self.checkReq(req):
+                        return False
                     allReq.append(req)
                     break
         f.close()
@@ -48,3 +53,11 @@ class Parser:
             post[name] = content
 
         return post
+
+    @staticmethod
+    def isComment(line):
+        return line.strip().find('#') is 0
+
+    @staticmethod
+    def checkReq(req):
+        return 'url' in req
