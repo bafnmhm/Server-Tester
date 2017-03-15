@@ -6,28 +6,35 @@ class Parser:
         allReq = []
         req = {}
         post = ''
-        with open(file, 'r', encoding='gbk') as f:
-            while True:
-                line = f.readline()
-                if line:
-                    # 折行
-                    if self.isWordwrap(line):
-                        continue
-                    # 注释
-                    if self.isComment(line):
-                        continue
-                    # url
-                    if self.isUrl(line):
-                        req['url'] = line.strip()
-                        continue
-                    # post
-                    post += line.strip()
-                else:
-                    req['post'] = self.parsePost(post)
-                    if not self.checkReq(req):
-                        return False
-                    allReq.append(req)
-                    break
+
+        with open(file, 'rb') as f:
+            for line in f:
+                try:
+                    line = line.decode('utf-8', 'ignore')
+                except ValueError:
+                    line = line.decode('gbk', 'ignore')
+                except:
+                    print('不支持的文本编码')
+                    return False
+
+                # 折行
+                if self.isWordwrap(line):
+                    continue
+                # 注释
+                if self.isComment(line):
+                    continue
+                # url
+                if self.isUrl(line):
+                    req['url'] = line.strip()
+                    continue
+                # post
+                post += line.strip()
+
+            req['post'] = self.parsePost(post)
+            if not self.checkReq(req):
+                return False
+            allReq.append(req)
+
         f.close()
         return allReq
 
