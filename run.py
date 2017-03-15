@@ -11,6 +11,7 @@ parser = Parser()
 request = Request()
 
 for i, cmd in enumerate(sys.argv):
+    # 指定请求ip
     if cmd == '-ip':
         request.host = sys.argv[i + 1]
 
