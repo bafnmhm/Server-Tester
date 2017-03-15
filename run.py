@@ -1,5 +1,7 @@
 import os
 import sys
+import json
+from xml.dom import minidom
 from inc.Parser import *
 from inc.Request import *
 
@@ -9,6 +11,7 @@ parser = Parser()
 request = Request()
 for curPath in os.walk(path):
     for file in curPath[2]:
+        # 执行一个测例文件
         fileDir = scriptPath + '\\' + curPath[0] + '\\' + file
         reportPath = scriptPath + '\\' + curPath[0].replace(path, 'report')
         reportFilePath = reportPath + '\\' + file
@@ -27,9 +30,23 @@ for curPath in os.walk(path):
             # 发送请求
             request.httpSend(req['url'], req['post'])
             if request.isConnectSuccess():
+
                 # 请求成功，保存结果
                 with open(reportFilePath, 'a', encoding='utf-8') as f:
                     res = request.getContent()
                     res = res.decode(encoding='utf-8')
+
+                    # 美化xml格式
+                    if res.find('<?xml') >= 0:
+                        dom = minidom.parseString(res)
+                        res = dom.toprettyxml(indent=' '*4)
+
+                    # 美化json格式
+                    try:
+                        res = json.loads(res)
+                        res = json.dumps(res, indent=4)
+                    except ValueError:
+                        pass
+
                     f.writelines(res)
                 f.close()
