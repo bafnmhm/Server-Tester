@@ -3,6 +3,9 @@ import urllib.parse
 
 
 class Request:
+    content = ''
+    status = ''
+    reason = ''
     host = '172.20.204.65:81'
     headers = {'Content-type': 'application/x-www-form-urlencoded',
                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -20,6 +23,14 @@ class Request:
         else:
             coon.request('GET', url, headers=self.headers)
         response = coon.getresponse()
-        print(response.status, response.reason)
-        print(response.read())
+        self.status = response.status
+        self.reason = response.reason
+        self.content = response.read()
+        print(self.content)
         coon.close()
+
+    def isConnectSuccess(self):
+        return self.status == 200
+
+    def getContent(self):
+        return self.content

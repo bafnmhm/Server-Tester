@@ -20,9 +20,7 @@ class Parser:
                     # post
                     post += line.strip()
                 else:
-                    postArr = self.parsePost(post)
-                    if postArr:
-                        req['post'] = postArr
+                    req['post'] = self.parsePost(post)
                     allReq.append(req)
                     break
         f.close()
@@ -39,7 +37,7 @@ class Parser:
     @staticmethod
     def parsePost(params):
         if not params:
-            return False
+            return None
 
         post = {}
         paramsArr = params.split('&')
@@ -48,4 +46,5 @@ class Parser:
             name = rq[0:poz]
             content = rq[poz + 1:]
             post[name] = content
+
         return post
