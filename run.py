@@ -5,21 +5,28 @@ from xml.dom import minidom
 from inc.Parser import *
 from inc.Request import *
 
-usecaseDir = 'usecase'
+usecaseDir = 'workplace\\usecase'
+reportDir = 'workplace\\report'
 scriptPath = sys.path[0]
 parser = Parser()
 request = Request()
 
 for i, cmd in enumerate(sys.argv):
     # 指定请求ip
-    if cmd == '-ip':
+    if cmd == '--ip':
         request.host = sys.argv[i + 1]
+    # 指定用例路径
+    if cmd == '--dir':
+        usecaseDir = 'workplace\\' + sys.argv[i + 1]
+    # 指定报告路径
+    if cmd == '--outdir':
+        reportDir = 'workplace\\' + sys.argv[i + 1]
 
 for curPath in os.walk(scriptPath + '\\' + usecaseDir):
     for file in curPath[2]:
         # 执行一个测例文件
         fileDir = curPath[0] + '\\' + file
-        reportPath = curPath[0].replace(usecaseDir, 'report')
+        reportPath = curPath[0].replace(usecaseDir, reportDir)
         reportFilePath = reportPath + '\\' + file
 
         # 删除原有的报告
@@ -57,7 +64,7 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
                 # 美化json格式
                 try:
                     res = json.loads(res)
-                    res = json.dumps(res, indent=4)
+                    res = json.dumps(res, indent=4, sort_keys=True)
                 except ValueError:
                     pass
 

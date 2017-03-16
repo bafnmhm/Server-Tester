@@ -22,6 +22,11 @@ class Parser:
                 # 注释
                 if self.isComment(line):
                     continue
+                # 新的请求
+                if self.isDivision(line):
+                    allReq.append(req)
+                    req = {'url': req['url']}
+                    continue
                 # url
                 if self.isUrl(line):
                     if 'url' in req:  # 新的请求
@@ -47,3 +52,7 @@ class Parser:
     @staticmethod
     def isComment(line):
         return line.strip().find('#') == 0
+
+    @staticmethod
+    def isDivision(line):
+        return line == '<<<'
