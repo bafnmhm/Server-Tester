@@ -5,7 +5,6 @@ class Parser:
     def parse(self, file):
         allReq = []
         req = {}
-        post = ''
 
         with open(file, 'rb') as f:
             for line in f:
@@ -25,14 +24,15 @@ class Parser:
                     continue
                 # url
                 if self.isUrl(line):
+                    if 'url' in req:  # 新的请求
+                        allReq.append(req)
+                        req = {}
                     req['url'] = line.strip()
                     continue
                 # post
-                post += line.strip()
+                req['post'] = 'post' in req and req['post'] + line.strip() or line.strip()
 
-            req['post'] = self.parsePost(post)
-            allReq.append(req)
-
+        allReq.append(req)
         f.close()
         return allReq
 
@@ -43,21 +43,6 @@ class Parser:
     @staticmethod
     def isUrl(line):
         return re.match('.?/thsft/', line) is not None
-
-    @staticmethod
-    def parsePost(params):
-        if not params:
-            return None
-
-        post = {}
-        paramsArr = params.split('&')
-        for rq in paramsArr:
-            poz = rq.find('=')
-            name = rq[0:poz]
-            content = rq[poz + 1:]
-            post[name] = content
-
-        return post
 
     @staticmethod
     def isComment(line):

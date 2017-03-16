@@ -31,15 +31,19 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
             os.makedirs(reportPath)
 
         reqArr = parser.parse(fileDir)
-        for req in reqArr:
-            # 发送请求
-            request.reset()
-            request.httpSend(req)
+        if not reqArr:
+            continue
 
-            # 请求结束，保存结果
-            with open(reportFilePath, 'a', encoding='utf-8') as f:
+        # 创建文本，保存结果
+        with open(reportFilePath, 'a', encoding='utf-8') as f:
+            for req in reqArr:
+                # 发送请求
+                request.reset()
+                request.httpSend(req)
+
+                # 用例有误
                 if request.error:
-                    f.writelines(request.error)
+                    f.writelines('#####\n\n' + request.error + '\n\n')
                     break
 
                 res = request.getContent()
@@ -57,5 +61,5 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
                 except ValueError:
                     pass
 
-                f.writelines(res)
-            f.close()
+                f.writelines('#####\n\n' + res + '\n\n')
+        f.close()

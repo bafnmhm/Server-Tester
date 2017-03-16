@@ -19,10 +19,11 @@ class Request:
             return False
 
         url = req['url']
-        post = 'post' in req and req['post'] or False
+        post = 'post' in req and req['post'] or ''
 
         coon = http.client.HTTPConnection(self.host)
         if post:
+            post = self.parsePost(post)
             params = urllib.parse.urlencode(post)
             coon.request('POST', url, params, headers=self.headers)
         else:
@@ -51,3 +52,22 @@ class Request:
         self.status = ''
         self.reason = ''
         self.error = ''
+
+    @staticmethod
+    def parsePost(params):
+        if not params:
+            return None
+
+        if isinstance(params, dict):
+            return params
+
+        post = {}
+        paramsArr = params.split('&')
+        for rq in paramsArr:
+            poz = rq.find('=')
+            name = rq[0:poz]
+            content = rq[poz + 1:]
+            post[name] = content
+
+        return post
+
