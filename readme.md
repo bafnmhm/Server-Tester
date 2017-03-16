@@ -1,2 +1,2 @@
 ### An auto tester
-> ..
+> ...
