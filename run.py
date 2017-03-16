@@ -18,6 +18,7 @@ for i, cmd in enumerate(sys.argv):
     # 指定用例路径
     if cmd == '--dir':
         usecaseDir = 'workplace\\' + sys.argv[i + 1]
+        reportDir = 'workplace\\report - ' + sys.argv[i + 1]
     # 指定报告路径
     if cmd == '--outdir':
         reportDir = 'workplace\\' + sys.argv[i + 1]
