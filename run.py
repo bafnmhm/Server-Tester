@@ -39,8 +39,7 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
             # 请求结束，保存结果
             with open(reportFilePath, 'a', encoding='utf-8') as f:
                 if request.error:
-                    err = request.error
-                    f.writelines(err)
+                    f.writelines(request.error)
                     break
 
                 res = request.getContent()
