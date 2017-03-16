@@ -47,7 +47,7 @@ class Parser:
 
     @staticmethod
     def isUrl(line):
-        return re.match('.?/thsft/', line) is not None
+        return re.match('^/?thsft/', line.strip()) is not None
 
     @staticmethod
     def isComment(line):
