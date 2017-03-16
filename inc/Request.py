@@ -12,9 +12,15 @@ class Request:
                'Upgrade-Insecure-Requests': '1',
                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)',
                }
+    error = ''
 
-    def httpSend(self, url, post=None):
-        print(url, post)
+    def httpSend(self, req):
+        if not self.checkReq(req):
+            return False
+
+        url = req['url']
+        post = 'post' in req and req['post'] or False
+
         coon = http.client.HTTPConnection(self.host)
         if post:
             params = urllib.parse.urlencode(post)
@@ -25,7 +31,6 @@ class Request:
         self.status = response.status
         self.reason = response.reason
         self.content = response.read()
-        print(self.content)
         coon.close()
 
     def isConnectSuccess(self):
@@ -33,3 +38,16 @@ class Request:
 
     def getContent(self):
         return self.content
+
+    def checkReq(self, req):
+        if 'url' not in req:
+            self.error = '请求url错误'
+            return False
+        else:
+            return True
+
+    def reset(self):
+        self.content = ''
+        self.status = ''
+        self.reason = ''
+        self.error = ''

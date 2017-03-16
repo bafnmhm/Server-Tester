@@ -31,8 +31,6 @@ class Parser:
                 post += line.strip()
 
             req['post'] = self.parsePost(post)
-            if not self.checkReq(req):
-                return False
             allReq.append(req)
 
         f.close()
@@ -63,8 +61,4 @@ class Parser:
 
     @staticmethod
     def isComment(line):
-        return line.strip().find('#') is 0
-
-    @staticmethod
-    def checkReq(req):
-        return 'url' in req
+        return line.strip().find('#') == 0

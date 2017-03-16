@@ -31,17 +31,18 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
             os.makedirs(reportPath)
 
         reqArr = parser.parse(fileDir)
-        if not reqArr:
-            print(fileDir + ' : 测试用例有误，请检查')
-            continue
-
         for req in reqArr:
             # 发送请求
-            request.httpSend(req['url'], req['post'])
+            request.reset()
+            request.httpSend(req)
 
             # 请求结束，保存结果
-            print(reportFilePath)
             with open(reportFilePath, 'a', encoding='utf-8') as f:
+                if request.error:
+                    err = request.error
+                    f.writelines(err)
+                    break
+
                 res = request.getContent()
                 res = res.decode(encoding='utf-8')
 
