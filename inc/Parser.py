@@ -16,6 +16,8 @@ class Parser:
                     print('不支持的文本编码')
                     return False
 
+                line = line.strip()
+
                 # 折行
                 if self.isWordwrap(line):
                     continue
@@ -32,10 +34,10 @@ class Parser:
                     if 'url' in req:  # 新的请求
                         allReq.append(req)
                         req = {}
-                    req['url'] = line.strip()
+                    req['url'] = line
                     continue
                 # post
-                req['post'] = 'post' in req and req['post'] + line.strip() or line.strip()
+                req['post'] = 'post' in req and req['post'] + line or line
 
         allReq.append(req)
         f.close()
@@ -47,11 +49,11 @@ class Parser:
 
     @staticmethod
     def isUrl(line):
-        return re.match('^/?thsft/', line.strip()) is not None
+        return re.match('^/?thsft/', line) is not None
 
     @staticmethod
     def isComment(line):
-        return line.strip().find('#') == 0
+        return line.find('#') == 0
 
     @staticmethod
     def isDivision(line):
