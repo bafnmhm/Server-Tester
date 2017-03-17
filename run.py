@@ -18,7 +18,8 @@ for i, cmd in enumerate(sys.argv):
     # 指定用例路径
     if cmd == '--dir' or cmd == '-d':
         usecaseDir = 'workplace\\' + sys.argv[i + 1]
-        reportDir = 'workplace\\report - ' + sys.argv[i + 1]
+        if '--outdir' not in sys.argv and '-o' not in sys.argv:
+            reportDir = 'workplace\\report - ' + sys.argv[i + 1]
     # 指定报告路径
     if cmd == '--outdir' or cmd == '-o':
         reportDir = 'workplace\\' + sys.argv[i + 1]
@@ -58,7 +59,7 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
                 res = res.decode(encoding='utf-8')
 
                 # 美化xml格式
-                if res.find('<?xml') >= 0:
+                if res.strip().find('<?xml') == 0:
                     dom = minidom.parseString(res)
                     res = dom.toprettyxml(indent=' ' * 4)
 
