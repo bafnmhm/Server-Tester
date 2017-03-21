@@ -56,7 +56,11 @@ for curPath in os.walk(scriptPath + '\\' + usecaseDir):
                     break
 
                 res = request.getContent()
-                res = res.decode(encoding='utf-8')
+
+                try:
+                    res = res.decode(encoding='utf-8')
+                except:
+                    res = res.decode(encoding='gbk')
 
                 # 美化xml格式
                 if res.strip().find('<?xml') == 0:
